@@ -173,6 +173,7 @@
 
   .hero-cta {
     display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
     position: relative;
     z-index: 1;
@@ -190,6 +191,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    cursor: pointer;
+    background: transparent;
   }
 
   .btn-primary {
@@ -206,6 +209,16 @@
 
   .btn-secondary { color: var(--muted); }
   .btn-secondary:hover { color: var(--text); border-color: var(--muted); }
+
+  .btn-contact {
+    color: var(--accent2);
+    border-color: rgba(58, 255, 212, 0.35);
+  }
+  .btn-contact:hover {
+    color: #000;
+    background: var(--accent2);
+    border-color: var(--accent2);
+  }
 
   .hero-scroll {
     position: absolute;
@@ -659,6 +672,14 @@
 
     .hero-cta {
       justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-cta .btn {
+      width: 100%;
+      max-width: 280px;
+      justify-content: center;
     }
 
     /* Better section spacing */
@@ -780,6 +801,9 @@
   <div class="hero-cta">
     <a href="#projects" class="btn btn-primary">View Projects →</a>
     <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+    <button type="button" class="btn btn-contact" id="saveContactBtn" title="Download contact card">
+      Save Contact ⬇
+    </button>
   </div>
 
   <div class="social-bar">
@@ -1075,6 +1099,35 @@
   document.querySelectorAll('.project-card').forEach((card, i) => {
     card.style.transitionDelay = `${i * 0.1}s`;
   });
+
+  // Save Contact (vCard) — works on phone & desktop
+  const saveContactBtn = document.getElementById('saveContactBtn');
+  if (saveContactBtn) {
+    saveContactBtn.addEventListener('click', () => {
+      const vcard = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'N:Patel;Kirtan;;;',
+        'FN:Kirtan Patel',
+        'TEL;TYPE=CELL,VOICE:+916354255368',
+        'EMAIL;TYPE=INTERNET:KP8269741@gmail.com',
+        'URL;TYPE=LinkedIn:https://www.linkedin.com/in/kirtan-patel-477b4b280/',
+        'URL;TYPE=Instagram:https://www.instagram.com/_kirtan_patel_8/',
+        'NOTE:Embedded Systems & Hardware Builder',
+        'END:VCARD'
+      ].join('\r\n');
+
+      const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Kirtan_Patel.vcf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
 </script>
 
 </body>
